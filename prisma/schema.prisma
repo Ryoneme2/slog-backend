@@ -1,0 +1,77 @@
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "darwin-arm64"]
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+model Users {
+  fname      String
+  lname      String
+  username   String     @id @unique
+  email      String     @unique
+  password   String
+  avatar     String
+  bio        String     @default("")
+  dateTime   DateTime   @default(now())
+  post       Posts[]
+  like       LikeBy[]
+  comment    Comments[]
+  diary      Diaries[]
+  followedBy Follows[]  @relation("following")
+  following  Follows[]  @relation("follower")
+}
+
+model Diaries {
+  diaryId  String   @id @default(cuid())
+  imageUrl String
+  assignTo String
+  dateTime DateTime @default(now())
+
+  Users    Users?  @relation(fields: [assignBy], references: [username])
+  assignBy String?
+}
+
+model Follows {
+  follower    Users  @relation("follower", fields: [followerId], references: [username])
+  followerId  String
+  following   Users  @relation("following", fields: [followingId], references: [username])
+  followingId String
+
+  @@id([followerId, followingId])
+}
+
+model Posts {
+  id          String     @id
+  postContent String
+  imageUrl    String?
+  comment     Comments[]
+  likeCount   Int        @default(0)
+  likeBy      LikeBy[]
+  dateTime    DateTime   @default(now())
+  Users       Users?     @relation(fields: [usersId], references: [username])
+  usersId     String?
+}
+
+model LikeBy {
+  username String
+  Posts    Posts? @relation(fields: [postsId], references: [id])
+  postsId  String
+  Users    Users? @relation(fields: [username], references: [username])
+
+  @@id([username, postsId])
+}
+
+model Comments {
+  id       Int      @id @default(sequence())
+  Users    Users?   @relation(fields: [username], references: [username])
+  username String
+  content  String
+  dataTime DateTime @default(now())
+  Posts    Posts?   @relation(fields: [postsId], references: [id])
+  postsId  String?
+}

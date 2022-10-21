@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  cache:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes: 
+      - cache:/data
+    networks:
+      - internal
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    depends_on:
+      - cache
+    environment:
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    links:
+      - cache
+    networks :
+      - internal
+  
+networks:
+  internal :
+    driver: bridge
+
+volumes:
+  cache:
+    driver: local
+    
+
