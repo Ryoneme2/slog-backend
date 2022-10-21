@@ -1,0 +1,15 @@
+import { client } from '../configs/redisConnection'
+import { Request, Response, NextFunction } from 'express'
+
+const cacheCheck = async (req: Request, res: Response, next: NextFunction) => {
+  const value = await client.get('name')
+  if (!value) return next()
+
+  res.status(200).send({
+    cached: true,
+    data: value,
+    msg: 'success get data'
+  })
+}
+
+export default cacheCheck
