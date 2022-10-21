@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import 'module-alias/register';
 import express, { Express } from "express";
 import { rateLimit } from 'express-rate-limit';
 import cors from "cors";

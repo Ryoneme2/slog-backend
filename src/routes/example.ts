@@ -1,4 +1,4 @@
-import cacheCheck from '../middleware/redis'
+import cacheCheck from '@middleware/redis'
 import express from 'express';
 
 const router = express.Router();
