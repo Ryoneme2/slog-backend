@@ -3,7 +3,7 @@ import express from 'express';
 
 const router = express.Router();
 
-router.get('/ex', cacheCheck, (req, res) => {
+router.get('/:ctx', cacheCheck, (req, res) => {
   console.log('cache miss')
   res.send('ยิ้ม')
 })
