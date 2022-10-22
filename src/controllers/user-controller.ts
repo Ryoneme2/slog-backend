@@ -13,6 +13,7 @@ const newUser = async (req: Request, res: Response) => {
     const [usernameZod, passwordZod] = [simpleValidate.string(username, 'username'), simpleValidate.string(password, 'password')]
 
 
+
     res.sendStatus(httpStats.notImplemented)
 
   } catch (e) {

@@ -65,19 +65,20 @@ const _addUser = async (data: {
       // The .code property can be accessed in a type-safe manner
       if (e.code === 'P2002') {
         return {
-          success: false,
+          isOk: false,
           data: {},
           msg: `username is already taken`,
         };
       }
       return {
-        success: false,
+        isOk: false,
         data: {},
+        msg: 'Internal Server Error Agent',
       };
     }
 
     return {
-      success: false,
+      isOk: false,
       data: {},
       msg: 'Internal Server Error Agent',
     };
