@@ -6,7 +6,7 @@ dotenv.config()
 
 import { httpStats } from '@config/http';
 
-const newUser = async (req: Request, res: Response) => {
+const getOne = async (req: Request, res: Response) => {
   try {
 
     const { username, password } = req.body
@@ -28,5 +28,5 @@ const newUser = async (req: Request, res: Response) => {
 }
 
 export {
-  newUser
+  getOne
 }

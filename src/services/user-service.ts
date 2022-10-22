@@ -27,7 +27,9 @@ const _addUser = async (data: {
       hashString(data.password),
       randAvatar(randString),
     ]);
-    if (!hashedPassword) return {
+    console.log({ hashedPassword, png });
+
+    if (!hashedPassword || !png) return {
       isOk: false,
       msg: 'hash password error'
     }
@@ -73,14 +75,14 @@ const _addUser = async (data: {
       return {
         isOk: false,
         data: {},
-        msg: 'Internal Server Error Agent',
+        msg: 'Internal Server Error register service',
       };
     }
 
     return {
       isOk: false,
       data: {},
-      msg: 'Internal Server Error Agent',
+      msg: 'Internal Server Error register service',
     };
   } finally {
     prisma.$disconnect()

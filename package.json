@@ -20,10 +20,13 @@
     "@util": "src/utils"
   },
   "dependencies": {
+    "@dicebear/avatars": "^4.10.5",
+    "@dicebear/avatars-avataaars-sprites": "^4.10.3",
     "@prisma/client": "^4.0.0",
     "@prisma/engines": "^3.12.0-31.ae010d3ee58f28c22599b1e5fbd1697a82240550",
     "@supabase/storage-js": "^2.0.0",
     "@types/node-cron": "^3.0.2",
+    "@types/sharp": "^0.31.0",
     "ajv": "^8.11.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -33,15 +36,14 @@
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "moment": "^2.29.4",
-    "node-cron": "^3.0.1",
-    "redis": "^4.3.1",
-    "uuid": "^8.3.2",
-    "zod": "^3.19.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.1",
+    "redis": "^4.3.1",
+    "sharp": "^0.31.1",
     "svg-to-img": "^2.0.9",
-    "@dicebear/avatars": "^4.10.5",
-    "@dicebear/avatars-avataaars-sprites": "^4.10.3"
+    "uuid": "^8.3.2",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.18.6",

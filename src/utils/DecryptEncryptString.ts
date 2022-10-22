@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 export const hashString = async (str: string) => {
   try {
-    const SALT_ROUNDS = Math.random().toFixed(5);
+    const SALT_ROUNDS = +Math.random().toFixed(5);
     const hash = await bcrypt.hash(str, SALT_ROUNDS);
     return {
       hash,
@@ -9,7 +9,6 @@ export const hashString = async (str: string) => {
     };
   } catch (e) {
     console.error(e);
-
     return
   }
 };

@@ -21,6 +21,7 @@ app.use(rateLimit({
 }))
 
 app.use('/example', routes.exampleRoute)
+app.use('/auth', routes.authRoutes)
 app.use('/users', routes.userRoutes)
 
 app.get('/testGet', (_, res) => {
