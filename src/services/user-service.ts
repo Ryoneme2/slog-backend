@@ -56,7 +56,7 @@ const _addUser = async (data: {
     });
     return {
       isOk: true,
-      // data: user,
+      data: { ...user, password: '******' },
       msg: 'create success',
     };
   } catch (e) {
