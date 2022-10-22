@@ -7,7 +7,7 @@
       "severity": "warning",
       "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
     },
-    "no-bitwise": false
+    "no-bitwise": true
   },
   "rulesDirectory": ["./tsconfig.json"]
 }
