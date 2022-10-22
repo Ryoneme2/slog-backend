@@ -1,4 +1,3 @@
-import { simpleValidate } from './../utils/validateValue';
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { ZodError } from 'zod'
@@ -8,11 +7,6 @@ import { httpStats } from '@config/http';
 
 const getOne = async (req: Request, res: Response) => {
   try {
-
-    const { username, password } = req.body
-    const [usernameZod, passwordZod] = [simpleValidate.string(username, 'username'), simpleValidate.string(password, 'password')]
-
-
 
     res.sendStatus(httpStats.notImplemented)
 
@@ -30,3 +24,6 @@ const getOne = async (req: Request, res: Response) => {
 export {
   getOne
 }
+
+// https://oijsgpmyxcrqexaewofb.supabase.co/storage/v1/object/public/dii-project-bucket/avatar/47d1e446-3bd5-46d0-b674-3376ece59a60.png
+// https://oijsgpmyxcrqexaewofb.supabase.co/storage/v1/object/public/avatar/47d1e446-3bd5-46d0-b674-3376ece59a60.png

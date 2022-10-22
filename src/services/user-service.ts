@@ -27,17 +27,19 @@ const _addUser = async (data: {
       hashString(data.password),
       randAvatar(randString),
     ]);
+
     console.log({ hashedPassword, png });
 
     if (!hashedPassword || !png) return {
       isOk: false,
       msg: 'hash password error'
     }
+    const bucketName = 'dii-project-bucket'
     const storageUrl =
-      'https://oijsgpmyxcrqexaewofb.supabase.co/storage/v1/object/public/';
+      `https://oijsgpmyxcrqexaewofb.supabase.co/storage/v1/object/public/${bucketName}/`;
 
     const x = await storageClient
-      .from('dii-project-bucket')
+      .from(bucketName)
       .upload(`avatar/${randString}.png`, png, {
         cacheControl: '3600',
         upsert: false,
