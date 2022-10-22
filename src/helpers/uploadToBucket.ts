@@ -6,21 +6,26 @@ const uploadToBucket = async (fileName: string, folder: string, file: Buffer) =>
     const storageUrl =
       `https://oijsgpmyxcrqexaewofb.supabase.co/storage/v1/object/public/${bucketName}/`;
 
-    const x = await storageClient
+    const response = await storageClient
       .from(bucketName)
       .upload(`${folder}/${fileName}.png`, file, {
         cacheControl: '3600',
         upsert: false,
       });
 
-    if (x.error) throw new Error(`${x.error.name} : ${x.error.message}`);
+    if (response.error) throw new Error(`${response.error.name} : ${response.error.message}`);
 
     return {
       error: false,
-      data: x.data.path
+      path: `${storageUrl}${response.data.path}`
     }
   } catch (e) {
-    return ''
+    console.error(e);
+
+    return {
+      error: true,
+      path: ''
+    }
   }
 }
 

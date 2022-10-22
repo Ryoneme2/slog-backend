@@ -7,6 +7,7 @@ import storageClient from '@config/connectStorage';
 import { v4 } from 'uuid';
 
 import { hashString, decodePassword } from '@util/DecryptEncryptString';
+import uploadToBucket from '@helper/uploadToBucket';
 import randAvatar from '@util/randomAvatar';
 
 dotenv.config();
@@ -35,33 +36,27 @@ const _addUser = async (data: {
       msg: 'hash password error'
     }
 
-    const bucketName = 'dii-project-bucket'
-    const storageUrl =
-      `https://oijsgpmyxcrqexaewofb.supabase.co/storage/v1/object/public/${bucketName}/`;
+    const { error, path } = await uploadToBucket(randString, 'avatar', png)
 
-    const x = await storageClient
-      .from(bucketName)
-      .upload(`avatar/${randString}.png`, png, {
-        cacheControl: '3600',
-        upsert: false,
-      });
+    if (error) return {
+      isOk: false,
+      data: {},
+      msg: 'Something wrong when try to upload image to bucket',
+    };
 
-    if (x.error) throw new Error(`${x.error.name} : ${x.error.message}`);
-
-    const imageUrl = `${storageUrl}${x.data.path}`;
-
-    await prisma.users.create({
+    const user = await prisma.users.create({
       data: {
         fname: data.firstName,
         lname: data.lastName,
         email: data.email,
-        avatar: imageUrl,
+        avatar: path,
         username: data.username,
         password: hashedPassword.hash,
       },
     });
     return {
       isOk: true,
+      // data: user,
       msg: 'create success',
     };
   } catch (e) {
