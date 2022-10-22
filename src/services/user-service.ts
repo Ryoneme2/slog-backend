@@ -34,6 +34,7 @@ const _addUser = async (data: {
       isOk: false,
       msg: 'hash password error'
     }
+
     const bucketName = 'dii-project-bucket'
     const storageUrl =
       `https://oijsgpmyxcrqexaewofb.supabase.co/storage/v1/object/public/${bucketName}/`;

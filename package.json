@@ -17,7 +17,8 @@
     "@config": "src/configs",
     "@controller": "src/controllers",
     "@service": "src/services",
-    "@util": "src/utils"
+    "@util": "src/utils",
+    "@helper": "src/helpers"
   },
   "dependencies": {
     "@dicebear/avatars": "^4.10.5",
