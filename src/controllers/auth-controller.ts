@@ -4,27 +4,39 @@ import dotenv from 'dotenv';
 import { ZodError } from 'zod'
 dotenv.config()
 
-import { httpStats } from '@config/http';
-import { _addUser } from '@service/user-service';
+import { httpStatus } from '@config/http';
+import { _addUser, _getOne } from '@service/user-service';
 
 const login = async (req: Request, res: Response) => {
   try {
 
     const { username, password } = req.body
-    const [usernameZod, passwordZod] = [simpleValidate.string(username, 'username'), simpleValidate.string(password, 'password')]
+    const [usernameZod, passwordZod] = [simpleValidate.string(username, 'username') as string, simpleValidate.string(password, 'password') as string]
+
+    const { data, isOk } = await _getOne(usernameZod)
+
+    if (!isOk) return res.status(httpStatus.internalServerError).send({
+      msg: 'Something went wrong with getOne user service'
+    })
+    if (!data)
+      return res.status(httpStatus.forbidden).send({
+        isOk: false,
+        msg: 'user not found',
+      });
 
 
 
-    res.sendStatus(httpStats.notImplemented)
+
+    res.sendStatus(httpStatus.notImplemented)
 
   } catch (e) {
     console.error(e);
     if (e instanceof ZodError) {
-      return res.status(httpStats.badRequest).send({
+      return res.status(httpStatus.badRequest).send({
         msg: e.issues
       })
     }
-    res.sendStatus(httpStats.internalServerError)
+    res.sendStatus(httpStatus.internalServerError)
   }
 }
 
@@ -42,18 +54,18 @@ const register = async (req: Request, res: Response) => {
 
     const result = await _addUser({ firstName: firstNameZod, lastName: lastNameZod, email: emailZod, username: usernameZod, password: passwordZod })
 
-    if (!result.isOk || typeof result.data === 'undefined') return res.status(httpStats.internalServerError).send(result)
+    if (!result.isOk || typeof result.data === 'undefined') return res.status(httpStatus.internalServerError).send(result)
 
-    return res.status(httpStats.created).send(result);
+    return res.status(httpStatus.created).send(result);
 
   } catch (e) {
     console.error(e);
     if (e instanceof ZodError) {
-      return res.status(httpStats.badRequest).send({
+      return res.status(httpStatus.badRequest).send({
         msg: e.issues
       })
     }
-    res.sendStatus(httpStats.internalServerError)
+    res.sendStatus(httpStatus.internalServerError)
   }
 }
 

@@ -1,6 +1,6 @@
 import { client, connectClient, quitClient } from '../configs/redisConnection'
 import { Request, Response, NextFunction } from 'express'
-import { httpStats } from '../configs/http'
+import { httpStatus } from '../configs/http'
 
 const cacheCheck = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -17,7 +17,7 @@ const cacheCheck = async (req: Request, res: Response, next: NextFunction) => {
       return
     }
 
-    res.status(httpStats.ok).send({
+    res.status(httpStatus.ok).send({
       cached: true,
       data: value,
       msg: 'success get data'

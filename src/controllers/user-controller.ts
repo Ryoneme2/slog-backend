@@ -3,21 +3,21 @@ import dotenv from 'dotenv';
 import { ZodError } from 'zod'
 dotenv.config()
 
-import { httpStats } from '@config/http';
+import { httpStatus } from '@config/http';
 
 const getOne = async (req: Request, res: Response) => {
   try {
 
-    res.sendStatus(httpStats.notImplemented)
+    res.sendStatus(httpStatus.notImplemented)
 
   } catch (e) {
     console.error(e);
     if (e instanceof ZodError) {
-      return res.status(httpStats.badRequest).send({
+      return res.status(httpStatus.badRequest).send({
         msg: e.issues
       })
     }
-    res.sendStatus(httpStats.internalServerError)
+    res.sendStatus(httpStatus.internalServerError)
   }
 }
 
