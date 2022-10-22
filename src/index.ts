@@ -21,10 +21,12 @@ app.use(rateLimit({
 }))
 
 app.use('/example', routes.exampleRoute)
+app.use('/users', routes.userRoutes)
 
 app.get('/testGet', (_, res) => {
   res.status(200).send('Get success')
 })
+
 
 const PORT = process.env.PORT || 8083;
 console.timeEnd('Server started');
