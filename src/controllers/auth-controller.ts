@@ -16,7 +16,14 @@ const login = async (req: Request, res: Response) => {
     const { username, password } = req.body
     const [usernameZod, passwordZod] = [simpleValidate.string(username, 'username') as string, simpleValidate.string(password, 'password') as string]
 
-    const { data, isOk } = await _getOne(usernameZod, { username: true, password: true, fname: true, lname: true, avatar: true, email: true })
+    const { data, isOk } = await _getOne(usernameZod,
+      {
+        fname: true,
+        lname: true,
+        username: true,
+        email: true,
+        avatar: true,
+      })
 
     console.log(data);
 

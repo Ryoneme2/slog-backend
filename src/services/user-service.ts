@@ -1,7 +1,7 @@
 
 
 import moment from 'moment';
-import { PrismaClient, Prisma, Users } from '@prisma/client';
+import * as P from '@prisma/client';
 import dotenv from 'dotenv';
 import storageClient from '@config/connectStorage';
 import { v4 } from 'uuid';
@@ -12,7 +12,26 @@ import randAvatar from '@util/randomAvatar';
 
 dotenv.config();
 
-const prisma = new PrismaClient();
+const prisma = new P.PrismaClient();
+
+type xx = {
+  countDiary: number
+  fname: string;
+  lname: string;
+  username: string;
+  email: string;
+  password: string;
+  avatar: string;
+  bio: string;
+  dateTime: Date;
+  post: P.Posts[];
+  like: P.LikeBy[];
+  comment: P.Comments[];
+  diary: P.Diaries[];
+  followedBy: P.Follows[];
+  following: P.Follows[];
+  _count: P.Prisma.UsersCountOutputType;
+}
 
 const _addUser = async (data: {
   firstName: string,
@@ -61,7 +80,7 @@ const _addUser = async (data: {
     };
   } catch (e) {
     console.log(e);
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    if (e instanceof P.Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === 'P2002') {
         return {
@@ -87,27 +106,40 @@ const _addUser = async (data: {
   }
 }
 
-const _getOne = async (username: string, select: Prisma.UsersSelect = {}) => {
+const _getOne = async <T>(username: string, select: P.Prisma.UsersSelect): Promise<{
+  isOk: boolean,
+  data: Pick<xx, keyof typeof select> & { countDiary: number } | null,
+  msg: string
+}> => {
   try {
-    type x = {
-      where: {
-        username: string
-      },
-      select?: Pick<Prisma.UsersSelect, keyof typeof select>
+
+    // if (Object.keys(select).length !== 0) config.select = select
+
+    const select = {
+      fname: true,
+      lname: true,
+      username: true,
+      email: true,
+      password: true,
+      avatar: true,
+      bio: true,
+      dateTime: true,
+      post: true,
+      like: true,
+      comment: true,
+      diary: true,
+      followedBy: true,
+      following: true,
+      _count: true,
     }
 
-    const config: x = {
-      where: {
-        username,
-      }
-    };
-
-    console.log(typeof config);
-
-    if (Object.keys(select).length !== 0) config.select = select
-
     const [userData, countDiary] = await prisma.$transaction([
-      prisma.users.findUnique(config),
+      prisma.users.findUnique({
+        where: {
+          username
+        },
+        select: select
+      }),
       prisma.diaries.count({
         where: {
           assignTo: username,
@@ -115,10 +147,16 @@ const _getOne = async (username: string, select: Prisma.UsersSelect = {}) => {
       }),
     ]);
 
+    if (userData === null) return {
+      isOk: true,
+      data: null,
+      msg: 'no error but user not found'
+    };
+
     return {
       isOk: true,
       data: { ...userData, countDiary },
-      msg: userData == null ? 'no error but user not found' : '',
+      msg: ''
     };
   } catch (e) {
     console.error(e);
