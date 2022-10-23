@@ -14,7 +14,7 @@ dotenv.config();
 
 const prisma = new P.PrismaClient();
 
-type xx = {
+type getOneReturnType = {
   countDiary: number
   fname: string;
   lname: string;
@@ -108,37 +108,33 @@ const _addUser = async (data: {
 
 const _getOne = async <T>(username: string, select: P.Prisma.UsersSelect): Promise<{
   isOk: boolean,
-  data: Pick<xx, keyof typeof select> & { countDiary: number } | null,
+  data: getOneReturnType & { countDiary: number } | null,
   msg: string
 }> => {
   try {
-
-    // if (Object.keys(select).length !== 0) config.select = select
-
-    const select = {
-      fname: true,
-      lname: true,
-      username: true,
-      email: true,
-      password: true,
-      avatar: true,
-      bio: true,
-      dateTime: true,
-      post: true,
-      like: true,
-      comment: true,
-      diary: true,
-      followedBy: true,
-      following: true,
-      _count: true,
-    }
 
     const [userData, countDiary] = await prisma.$transaction([
       prisma.users.findUnique({
         where: {
           username
         },
-        select: select
+        select: {
+          fname: true,
+          lname: true,
+          username: true,
+          email: true,
+          password: true,
+          avatar: true,
+          bio: true,
+          dateTime: true,
+          post: true,
+          like: true,
+          comment: true,
+          diary: true,
+          followedBy: true,
+          following: true,
+          _count: true,
+        }
       }),
       prisma.diaries.count({
         where: {
