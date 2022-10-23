@@ -1,7 +1,7 @@
 
 
 import moment from 'moment';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma, Users } from '@prisma/client';
 import dotenv from 'dotenv';
 import storageClient from '@config/connectStorage';
 import { v4 } from 'uuid';
@@ -87,13 +87,22 @@ const _addUser = async (data: {
   }
 }
 
-const _getOne = async (username: string, select = {}) => {
+const _getOne = async (username: string, select: Prisma.UsersSelect = {}) => {
   try {
-    const config: Prisma.UsersFindUniqueArgs = {
+    type x = {
+      where: {
+        username: string
+      },
+      select?: Pick<Prisma.UsersSelect, keyof typeof select>
+    }
+
+    const config: x = {
       where: {
         username,
-      },
+      }
     };
+
+    console.log(typeof config);
 
     if (Object.keys(select).length !== 0) config.select = select
 
@@ -112,6 +121,8 @@ const _getOne = async (username: string, select = {}) => {
       msg: userData == null ? 'no error but user not found' : '',
     };
   } catch (e) {
+    console.error(e);
+
     return {
       isOk: false,
       data: null,
