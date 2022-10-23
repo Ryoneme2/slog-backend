@@ -1,5 +1,5 @@
-import { simpleValidate } from '../utils/validateValue';
-import { Request, Response } from 'express';
+import { simpleValidate } from '@util/validateValue';
+import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { ZodError } from 'zod'
 import jwt from 'jsonwebtoken'
@@ -16,14 +16,7 @@ const login = async (req: Request, res: Response) => {
     const { username, password } = req.body
     const [usernameZod, passwordZod] = [simpleValidate.string(username, 'username') as string, simpleValidate.string(password, 'password') as string]
 
-    const { data, isOk } = await _getOne(usernameZod,
-      {
-        fname: true,
-        lname: true,
-        username: true,
-        email: true,
-        avatar: true,
-      })
+    const { data, isOk } = await _getOne(usernameZod)
 
     console.log(data);
 

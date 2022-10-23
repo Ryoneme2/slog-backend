@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { ZodError } from 'zod'
 dotenv.config()
@@ -11,24 +11,17 @@ const getOne = async (req: Request, res: Response) => {
   console.log(req.params);
   const { userId } = req.params;
   try {
-    const user = await _getOne(userId, {
-      fname: true,
-      lname: true,
-      username: true,
-      email: true,
-      avatar: true,
-      bio: true,
-      dateTime: true,
-      post: true,
-      diary: true,
-    });
+    const user = await _getOne(userId, true);
+
+    console.log(user);
+
 
     if (!user.isOk) return res.status(httpStatus.badRequest).send(user);
     if (!user.data)
-      return res.status(httpStatus.noContent).send({
+      return res.status(httpStatus.ok).send({
         isOk: true,
         data: null,
-        msg: 'success',
+        msg: 'success on content',
       });
 
     const format = {
@@ -36,8 +29,8 @@ const getOne = async (req: Request, res: Response) => {
       username: user.data.username,
       profileUrl: user.data.avatar,
       bio: user.data.bio,
-      postCount: user.data.post.length,
-      diaryCount: user.data.countDiary,
+      postCount: user.data._count.post,
+      diaryCount: user.data._count.diary,
       email: user.data.email,
       post: user.data.post
         .map((p) => {

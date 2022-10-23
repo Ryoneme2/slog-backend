@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Response, NextFunction } from 'express';
-import { httpStats } from '@config/http';
+import { httpStatus } from '@config/http';
 import type { UserJwtPayload, IGetUserAuthInfoRequest } from '../@types/jwt'
 dotenv.config();
 
@@ -27,7 +27,7 @@ const auth = (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) =
   } catch (e) {
     console.error(e);
 
-    res.status(httpStats.internalServerError).send({
+    res.status(httpStatus.internalServerError).send({
       msg: 'internal error'
     })
   }

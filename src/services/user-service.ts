@@ -14,24 +14,24 @@ dotenv.config();
 
 const prisma = new P.PrismaClient();
 
-type getOneReturnType = {
-  countDiary: number
-  fname: string;
-  lname: string;
-  username: string;
-  email: string;
-  password: string;
-  avatar: string;
-  bio: string;
-  dateTime: Date;
-  post: P.Posts[];
-  like: P.LikeBy[];
-  comment: P.Comments[];
-  diary: P.Diaries[];
-  followedBy: P.Follows[];
-  following: P.Follows[];
-  _count: P.Prisma.UsersCountOutputType;
-}
+// type getOneReturnType = {
+//   countDiary: number
+//   fname: string;
+//   lname: string;
+//   username: string;
+//   email: string;
+//   password: string;
+//   avatar: string;
+//   bio: string;
+//   dateTime: Date;
+//   post: P.Posts[];
+//   like: P.LikeBy[];
+//   comment: P.Comments[];
+//   diary: P.Diaries[];
+//   followedBy: P.Follows[];
+//   following: P.Follows[];
+//   _count: P.Prisma.UsersCountOutputType;
+// }
 
 const _addUser = async (data: {
   firstName: string,
@@ -106,40 +106,50 @@ const _addUser = async (data: {
   }
 }
 
-const _getOne = async <T>(username: string, select: P.Prisma.UsersSelect): Promise<{
-  isOk: boolean,
-  data: getOneReturnType & { countDiary: number } | null,
-  msg: string
-}> => {
+const _getOne = async (username: string, isSelectAll?: boolean) => {
   try {
 
-    const [userData, countDiary] = await prisma.$transaction([
+    // isSelectAll = isSelectAll === undefined ? true : false
+
+    const select = {
+      fname: true,
+      lname: true,
+      username: true,
+      email: true,
+      password: true,
+      avatar: true,
+      bio: true,
+      dateTime: true,
+      post: true,
+      diary: true,
+      followedBy: true,
+      following: true,
+      _count: true,
+    }
+
+    // const selectWithoutPost = {
+    //   fname: true,
+    //   lname: true,
+    //   username: true,
+    //   email: true,
+    //   password: true,
+    //   avatar: true,
+    //   bio: true,
+    //   dateTime: true,
+    //   diary: true,
+    //   followedBy: true,
+    //   following: true,
+    //   _count: true,
+    // }
+
+    // const realSelect = isSelectAll ? select : selectWithoutPost
+
+    const [userData] = await prisma.$transaction([
       prisma.users.findUnique({
         where: {
           username
         },
-        select: {
-          fname: true,
-          lname: true,
-          username: true,
-          email: true,
-          password: true,
-          avatar: true,
-          bio: true,
-          dateTime: true,
-          post: true,
-          like: true,
-          comment: true,
-          diary: true,
-          followedBy: true,
-          following: true,
-          _count: true,
-        }
-      }),
-      prisma.diaries.count({
-        where: {
-          assignTo: username,
-        },
+        select,
       }),
     ]);
 
@@ -151,7 +161,7 @@ const _getOne = async <T>(username: string, select: P.Prisma.UsersSelect): Promi
 
     return {
       isOk: true,
-      data: { ...userData, countDiary },
+      data: { ...userData },
       msg: ''
     };
   } catch (e) {
